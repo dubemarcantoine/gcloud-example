@@ -1,4 +1,28 @@
 <!DOCTYPE html>
+<!--
+  ~ The MIT License (MIT)
+  ~
+  ~ Copyright (c) 2016 Marc-Antoine Dubé
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -49,7 +73,7 @@
     });
 
   function create(name, email) {
-    $.post("/api/users",
+    $.post("/users",
         {name: name, email: email},
         function(data) {
           load();
@@ -59,7 +83,7 @@
   function remove(id) {
     $.ajax({
       type: "delete",
-      url: "/api/users/" + id
+      url: "/users/" + id
     }).done(function () {
       load();
     });
@@ -68,7 +92,7 @@
   function update(id, name, email) {
     $.ajax({
       type: "put",
-      url: "/api/users/" + id,
+      url: "/users/" + id,
       dataType: "json",
       data: {name: name, email: email},
       success: function (response) {
@@ -79,15 +103,15 @@
 
   function load() {
     $("#content").children().remove();
-    $.getJSON("/api/users", function (data) {
+    $.getJSON("/users", function (data) {
       $.each(data, function (key, val) {
-        $("<tr><td>" + val.id + "</td><td>" + val.name + "</td><td>"
+        $("<tr><td>" + val.id + "</td><td>" + val.username + "</td><td>"
             + val.email + "</td><td>"
             + "<button data-action='edit' "
             + "class='btn btn-primary btn-sm datastore-edit' "
             + "data-toggle='modal' "
             + "data-target='#datastoreModal' "
-            + "data-name='" + val.name + "' "
+            + "data-name='" + val.username + "' "
             + "data-email='" + val.email + "' "
             + "data-id='" + val.id + "'>"
             + "<span class='glyphicon glyphicon-pencil'></span>"
