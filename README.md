@@ -13,11 +13,13 @@ Si vous suivez mon atelier en classe, vous pouvez aller directement a l'étape 2
 
 ## Lancer le projet localement
 Si vous suivez mon atelier en classe
+
 1. Téléchargez la [clé](https://support.google.com/cloud/?rd=2#topic=6288636) et créez votre variable d'environnement `GOOGLE_APPLICATION_CREDENTIALS` pointant vers l'emplacement du fichier.
 2. Lancez le main situé à `com.appspot.gcloudExample.Main`
 3. Dirigez-vous à l'adresse `localhost:8080` dans votre navigateur
 
 Si vous ne suivez pas l'atelier en classe :
+
 1. À la racine du projet, exécutez : `mvn clean package exec:java`
 2. Dirigez-vous à l'adresse `localhost:8080` dans votre navigateur
 
