@@ -34,9 +34,11 @@ Ce petit exemple démontrant des technologies de Google Cloud utilise la micro-l
 ### Déploiment
 Le fichier `src/main/appengine/app.yaml` décrit comment sera déployée l'application sur Google App Engine. Cet exemple utilise Docker qui spécifie simplement la version de la JDK et comment démarrer le jar généré par le build. Plusieurs configurations sont possibles. Par exemple, on peut spécifier des règles de `load balancer` ou des règles sur les configurations de la RAM ou des CPUs des instances.
 Voici un exemple sur comment configurer un load balancer :
+```
 automatic_scaling:
   min_num_instances: 5
   max_num_instances: 20
   cool_down_period_sec: 120
   cpu_utilization:
     target_utilization: 0.5 # % CPU moyen des instances avant d'en ajouter ou en enlever.
+```
