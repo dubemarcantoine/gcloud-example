@@ -31,6 +31,13 @@ Si vous avez activé la facturation lors de la configuration du projet, exécute
 Cet exemple utilise `Google Datastore` afin de persister et traiter les données transmises. Datastore est une base de donnée NoSQL de Google. Les attributs des entités sont tous indexés pour des requêtes plus rapides.
 ### Routes
 Ce petit exemple démontrant des technologies de Google Cloud utilise la micro-librairie `SparkJava` pour les routes de l'API Rest. Par défaut, SparkJava utilise Jetty comme conteneur pour applications Servlet. L'application n'a donc pas besoin de services externes comme un serveur Tomcat. Le démarrage de l'application est donc rapide et le tout est démarré à partir du `main` principal.
+Voici un exemple de route qui va chercher tous les usagers et les retourne en format json.
+```
+get("/users", (req, res) -> {
+    return db.getUsers();
+}, json());
+```
+Pour plus d'informations, voir [le site de SparkJava](https://sparkjava.com)
 ### Déploiment
 Le fichier `src/main/appengine/app.yaml` décrit comment sera déployée l'application sur Google App Engine. Cet exemple utilise Docker qui spécifie simplement la version de la JDK et comment démarrer le jar généré par le build. Plusieurs configurations sont possibles. Par exemple, on peut spécifier des règles de `load balancer` ou des règles sur les configurations de la RAM ou des CPUs des instances.
 Voici un exemple sur comment configurer un load balancer :
