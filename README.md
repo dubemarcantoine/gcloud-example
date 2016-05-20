@@ -7,9 +7,10 @@ Cet example démontre une simple application web configurée pour la librairie G
 ---
 Si vous suivez mon atelier en classe, vous pouvez aller directement a l'étape 3.
 
-1. Créez-vous un compte Google Developer. Suivez ces instructions : [Suivez ces instructions](https://cloud.google.com/docs/authentication#preparation) afin de configurer votre compte. Si vous voulez par la suite déployer l'application, vous devez [activer la facturation](https://support.google.com/cloud/?rd=2#topic=6288636).
-2. Configurez votre environnement local en installant la [librairie GCloud pour Java](https://cloud.google.com/sdk/)
-3. Assurez-vous d'avoir Java 8 et Maven installés
+1. Créez-vous un compte Google Developer. Suivez ces instructions : [Suivez ces instructions](https://cloud.google.com/docs/authentication#preparation) afin de configurer votre compte. Si vous voulez par la suite déployer l'application, vous devez [activer la facturation](https://support.google.com/cloud/?rd=2#topic=6288636) lorsque vous créez votre projet
+2. Activer [l'API de Datastore](https://console.cloud.google.com/apis/api/datastore.googleapis.com/overview?) 
+3. Configurez votre environnement local en installant la [librairie GCloud pour Java](https://cloud.google.com/sdk/)
+4. Assurez-vous d'avoir Java 8 et Maven installés
 
 ## Lancer le projet localement
 Si vous suivez mon atelier en classe
