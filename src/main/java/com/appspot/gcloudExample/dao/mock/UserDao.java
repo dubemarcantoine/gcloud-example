@@ -20,7 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- */
+*/
 
 package com.appspot.gcloudExample.dao.mock;
 
@@ -36,5 +36,20 @@ public class UserDao implements IUserDao {
     @Override
     public List<User> getUsers() {
         return null;
+    }
+
+    @Override
+    public User createUser(String name, String email) {
+        return null;
+    }
+
+    @Override
+    public void updateUser(Long id, String name, String email) {
+
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+
     }
 }

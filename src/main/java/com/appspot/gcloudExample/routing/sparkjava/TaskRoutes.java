@@ -22,23 +22,43 @@
  * SOFTWARE.
  */
 
-package com.appspot.gcloudExample.dao;
+package com.appspot.gcloudExample.routing.sparkjava;
 
-import com.appspot.gcloudExample.dao.datastore.TaskDao;
 import com.appspot.gcloudExample.dao.interfaces.ITaskDao;
-import com.appspot.gcloudExample.dao.interfaces.IUserDao;
-import com.appspot.gcloudExample.dao.datastore.UserDao;
-import com.google.inject.AbstractModule;
+import com.appspot.gcloudExample.routing.interfaces.ITaskRoutes;
+import com.google.inject.Inject;
+
+import static com.appspot.gcloudExample.routing.sparkjava.JsonResponse.json;
+import static spark.Spark.*;
 
 /**
- * Created by Marc-Antoine on 2016-05-18.
+ * Created by Marc-Antoine on 2016-05-20.
  */
-public class DatabaseInjector extends AbstractModule {
+public class TaskRoutes implements ITaskRoutes {
+
+    private ITaskDao taskDao;
+
+    @Inject
+    public TaskRoutes(ITaskDao taskDao) {
+        this.taskDao = taskDao;
+    }
 
     @Override
-    protected void configure() {
-        //Bind the dao interface to the UserDao implementation in datastore package
-        bind(IUserDao.class).to(UserDao.class);
-        bind(ITaskDao.class).to(TaskDao.class);
+    public void listen() {
+        get("/users/:id/tasks", (req, res) -> {
+            return null;
+        }, json());
+
+        post("/users/:id/tasks", (req, res) -> {
+            return null;
+        }, json());
+
+        put("/tasks/:id", (req, res) -> {
+            return null;
+        }, json());
+
+        delete("/tasks/:id", (req, res) -> {
+            return null;
+        }, json());
     }
 }

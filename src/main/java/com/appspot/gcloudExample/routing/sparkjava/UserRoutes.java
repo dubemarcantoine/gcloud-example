@@ -24,29 +24,46 @@
 
 package com.appspot.gcloudExample.routing.sparkjava;
 
-import com.appspot.gcloudExample.dao.DatabaseModule;
-import com.appspot.gcloudExample.dao.DatabaseInjector;
+import com.appspot.gcloudExample.dao.interfaces.IUserDao;
 import com.appspot.gcloudExample.routing.interfaces.IUserRoutes;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import spark.Spark;
+import com.google.inject.Inject;
 
-import static spark.Spark.get;
+import static com.appspot.gcloudExample.routing.sparkjava.JsonResponse.json;
+import static spark.Spark.*;
 
 /**
  * Created by Marc-Antoine on 2016-05-18.
  */
 public class UserRoutes implements IUserRoutes {
 
-    private DatabaseModule db;
+    private final IUserDao userDao;
+
+    @Inject
+    public UserRoutes(IUserDao userDao) {
+        this.userDao = userDao;
+    }
 
     public void listen() {
-        //Inject database
-        Injector databaseInjector = Guice.createInjector(new DatabaseInjector());
-        db = databaseInjector.getInstance(DatabaseModule.class);
 
-        Spark.get("/users", (req, res) -> {
-            return db.getUsers();
-        }, JsonResponse.json());
+        get("/users", (req, res) -> {
+            return this.userDao.getUsers();
+        }, json());
+
+        post("/users", (req, res) -> {
+            return this.userDao.createUser(req.queryParams("name"), req.queryParams("email"));
+        }, json());
+
+        put("/users/:id", (req, res) -> {
+            this.userDao.updateUser(
+                    Long.parseLong(req.params(":id")),
+                    req.queryParams("name"),
+                    req.queryParams("email"));
+            return true;
+        }, json());
+
+        delete("/users/:id", (req, res) -> {
+            this.userDao.deleteUser(Long.parseLong(req.params(":id")));
+            return true;
+        }, json());
     }
 }

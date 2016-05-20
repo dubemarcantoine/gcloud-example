@@ -22,12 +22,22 @@
  * SOFTWARE.
  */
 
-package com.appspot.gcloudExample.dao.datastore;
+package com.appspot.gcloudExample.dao.interfaces;
+
+import com.appspot.gcloudExample.bean.Task;
+
+import java.util.List;
 
 /**
- * Created by Marc-Antoine on 2016-05-18.
+ * Created by Marc-Antoine on 2016-05-20.
  */
-public class DATASTORE_KIND {
+public interface ITaskDao {
 
-    public static final String USER = "user";
+    public List<Task> getTasks(Long userId);
+
+    public Task createTask(Task task, Long userId);
+
+    public void updateTask(Task task);
+
+    public void deleteTask(Long taskId);
 }

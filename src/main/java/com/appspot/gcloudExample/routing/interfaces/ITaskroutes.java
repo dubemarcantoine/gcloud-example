@@ -22,23 +22,12 @@
  * SOFTWARE.
  */
 
-package com.appspot.gcloudExample.dao;
-
-import com.appspot.gcloudExample.dao.datastore.TaskDao;
-import com.appspot.gcloudExample.dao.interfaces.ITaskDao;
-import com.appspot.gcloudExample.dao.interfaces.IUserDao;
-import com.appspot.gcloudExample.dao.datastore.UserDao;
-import com.google.inject.AbstractModule;
+package com.appspot.gcloudExample.routing.interfaces;
 
 /**
- * Created by Marc-Antoine on 2016-05-18.
+ * Created by Marc-Antoine on 2016-05-20.
  */
-public class DatabaseInjector extends AbstractModule {
+public interface ITaskRoutes {
 
-    @Override
-    protected void configure() {
-        //Bind the dao interface to the UserDao implementation in datastore package
-        bind(IUserDao.class).to(UserDao.class);
-        bind(ITaskDao.class).to(TaskDao.class);
-    }
+    public void listen();
 }

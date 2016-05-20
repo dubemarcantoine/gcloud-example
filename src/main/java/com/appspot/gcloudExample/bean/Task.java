@@ -22,30 +22,29 @@
  * SOFTWARE.
  */
 
-package com.appspot.gcloudExample.dao;
-
-import com.appspot.gcloudExample.bean.User;
-import com.appspot.gcloudExample.dao.interfaces.IUserDao;
-import com.google.inject.Inject;
-
-import java.util.List;
+package com.appspot.gcloudExample.bean;
 
 /**
- * Created by Marc-Antoine on 2016-05-18.
+ * Created by Marc-Antoine on 2016-05-20.
  */
-//Implement all the interfaces that the class injects
-//In the implementation, call the interface and the method
-public class DatabaseModule implements IUserDao {
+public class Task {
 
-    private IUserDao userDao;
+    private Long id;
+    private String name;
 
-    @Inject
-    public DatabaseModule(IUserDao userDao) {
-        this.userDao = userDao;
+    public Long getId() {
+        return id;
     }
 
-    @Override
-    public List<User> getUsers() {
-        return userDao.getUsers();
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

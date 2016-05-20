@@ -34,4 +34,10 @@ import java.util.List;
 public interface IUserDao {
 
     public List<User> getUsers();
+
+    public User createUser(String name, String email);
+
+    public void updateUser(Long id, String name, String email);
+
+    public void deleteUser(Long id);
 }

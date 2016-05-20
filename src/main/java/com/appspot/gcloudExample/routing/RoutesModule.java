@@ -25,6 +25,7 @@
 package com.appspot.gcloudExample.routing;
 
 import com.appspot.gcloudExample.routing.interfaces.IRouteConfig;
+import com.appspot.gcloudExample.routing.interfaces.ITaskRoutes;
 import com.appspot.gcloudExample.routing.interfaces.IUserRoutes;
 import com.google.inject.Inject;
 
@@ -35,15 +36,19 @@ public class RoutesModule {
 
     private IRouteConfig routeConfig;
     private IUserRoutes userRoutes;
+    private ITaskRoutes taskRoutes;
 
     @Inject
-    public RoutesModule(IRouteConfig routeConfig, IUserRoutes userRoutes) {
+    public RoutesModule(IRouteConfig routeConfig, IUserRoutes userRoutes,
+                        ITaskRoutes taskRoutes) {
         this.routeConfig = routeConfig;
         this.userRoutes = userRoutes;
+        this.taskRoutes = taskRoutes;
     }
 
     public void setup() {
         this.routeConfig.init();
         this.userRoutes.listen();
+        this.taskRoutes.listen();
     }
 }

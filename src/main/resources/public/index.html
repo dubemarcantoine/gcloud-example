@@ -141,7 +141,7 @@
       datastoreAction.unbind();
       var modal = $(this);
       if (action === "add") {
-        modal.find('.modal-title').text("Add a user");
+        modal.find('#datastoreModalTitle').text("Add a user");
         modal.find('#name').val("");
         modal.find('#email').val("");
         datastoreAction.click(function () {
@@ -149,7 +149,7 @@
           $('#datastoreModal').modal('toggle');
         });
       } else if (action === "edit") {
-        modal.find('.modal-title').text("Edit a user");
+        modal.find('#datastoreModalTitle').text("Edit a user");
         modal.find('#name').val(button.data("name"));
         modal.find('#email').val(button.data("email"));
         datastoreAction.click(function () {

@@ -24,9 +24,12 @@
 
 package com.appspot.gcloudExample.routing;
 
+import com.appspot.gcloudExample.dao.DatabaseInjector;
 import com.appspot.gcloudExample.routing.interfaces.IRouteConfig;
+import com.appspot.gcloudExample.routing.interfaces.ITaskRoutes;
 import com.appspot.gcloudExample.routing.interfaces.IUserRoutes;
 import com.appspot.gcloudExample.routing.sparkjava.RouteConfig;
+import com.appspot.gcloudExample.routing.sparkjava.TaskRoutes;
 import com.appspot.gcloudExample.routing.sparkjava.UserRoutes;
 import com.google.inject.AbstractModule;
 
@@ -37,8 +40,10 @@ public class RoutingInjector extends AbstractModule {
 
     @Override
     protected void configure() {
+        this.install(new DatabaseInjector());
         //Bind the interfaces to implementation class
         bind(IRouteConfig.class).to(RouteConfig.class);
         bind(IUserRoutes.class).to(UserRoutes.class);
+        bind(ITaskRoutes.class).to(TaskRoutes.class);
     }
 }

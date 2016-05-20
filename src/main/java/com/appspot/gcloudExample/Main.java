@@ -36,7 +36,7 @@ public class Main {
 
     public static void main(String[] args) {
         Injector routingInjector = Guice.createInjector(new RoutingInjector());
-        RoutesModule app = routingInjector.getInstance(RoutesModule.class);
-        app.setup();
+        RoutesModule routesModule = routingInjector.getInstance(RoutesModule.class);
+        routesModule.setup();
     }
 }

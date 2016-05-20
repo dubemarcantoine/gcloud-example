@@ -22,23 +22,34 @@
  * SOFTWARE.
  */
 
-package com.appspot.gcloudExample.dao;
+package com.appspot.gcloudExample.dao.mock;
 
-import com.appspot.gcloudExample.dao.datastore.TaskDao;
+import com.appspot.gcloudExample.bean.Task;
 import com.appspot.gcloudExample.dao.interfaces.ITaskDao;
-import com.appspot.gcloudExample.dao.interfaces.IUserDao;
-import com.appspot.gcloudExample.dao.datastore.UserDao;
-import com.google.inject.AbstractModule;
+
+import java.util.List;
 
 /**
- * Created by Marc-Antoine on 2016-05-18.
+ * Created by Marc-Antoine on 2016-05-20.
  */
-public class DatabaseInjector extends AbstractModule {
+public class TaskDao implements ITaskDao {
+    @Override
+    public List<Task> getTasks(Long userId) {
+        return null;
+    }
 
     @Override
-    protected void configure() {
-        //Bind the dao interface to the UserDao implementation in datastore package
-        bind(IUserDao.class).to(UserDao.class);
-        bind(ITaskDao.class).to(TaskDao.class);
+    public Task createTask(Task task, Long userId) {
+        return null;
+    }
+
+    @Override
+    public void updateTask(Task task) {
+
+    }
+
+    @Override
+    public void deleteTask(Long taskId) {
+
     }
 }

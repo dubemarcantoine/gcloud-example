@@ -25,39 +25,35 @@
 package com.appspot.gcloudExample.dao.datastore;
 
 
+import com.google.cloud.AuthCredentials;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
+import com.google.inject.Singleton;
 
 /**
  * Created by Marc-Antoine on 2016-03-25.
  */
+@Singleton
 public class Connection {
 
-    private static Datastore client;
+    private Datastore client;
 
-    private Connection() {
-        connect();
-    }
-
-    private static void connect() {
+    public Connection() {
         try {
-            //METHOD 1
-            client = DatastoreOptions.defaultInstance().service();
-//            //METHOD 2
-//            DatastoreOptions options = DatastoreOptions.builder()
-//                    .projectId("PROJECT_NAME")
-//                    .authCredentials(AuthCredentials.createApplicationDefaults()).build();
-//            client = options.service();
+            //METHOD 1 when you have a project
+//            client = DatastoreOptions.defaultInstance().service();
+//            //METHOD 2 when you have the key
+            DatastoreOptions options = DatastoreOptions.builder()
+                    .projectId("gcloud-example")
+                    .authCredentials(AuthCredentials.createApplicationDefaults()).build();
+            this.client = options.service();
         }
         catch(Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static Datastore getConn() {
-        if(client == null) {
-            new Connection();
-        }
-        return client;
+    public Datastore getClient() {
+        return this.client;
     }
 }

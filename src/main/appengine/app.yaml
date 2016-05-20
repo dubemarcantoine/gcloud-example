@@ -1,3 +1,9 @@
 runtime: custom
 vm: true
 
+automatic_scaling:
+  min_num_instances: 2
+  max_num_instances: 4
+  cool_down_period_sec: 120
+  cpu_utilization:
+    target_utilization: 0.5 # % CPU moyen des instances avant d'en ajouter ou en enlever.
