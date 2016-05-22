@@ -22,6 +22,101 @@ Si vous avez activé la facturation lors de la configuration du projet, exécute
 ## Comment le projet fonctionne
 ### Datastore
 Cet exemple utilise `Google Datastore` afin de persister et traiter les données transmises. Datastore est une base de donnée NoSQL de Google. Les attributs des entités sont tous indexés pour des requêtes plus rapides.
+
+**Connection au Datastore**
+Si on utilise la librairie GCloud : 
+```
+Datastore client = DatastoreOptions.defaultInstance().service();
+```
+Si on utilise Datastore à l'extérieur des environnements Google :
+```
+DatastoreOptions options = DatastoreOptions.builder()
+        .projectId("<PROJECT_NAME>")
+        .authCredentials(AuthCredentials.createApplicationDefaults()).build();
+Datastore client = options.service();
+```
+
+**KeyFactory**
+Dans nos classes DAOs, nous devons spécifier un `KeyFactory` qui représentera le type des entités gérées par notre DAO : 
+```
+KeyFactory keyFactory = datastore.newKeyFactory().kind(USER);
+```
+
+**Création d'entités**
+Datastore utilise des `clés-valeurs` afin de représenter les données. Voici comment nous pouvons faire une insertion :
+```
+FullEntity<IncompleteKey> incUser = Entity.builder(this.keyFactory.newKey())
+       .set("username", name)
+       .set("email", email)
+       .build();
+Entity createdEntity = datastore.add(incUser);
+```
+Il est possible d'avoir la clé générée comme cela : 
+```
+//Key Object
+createdEntity.key();
+//Long id
+createdEntity.key().id();
+//Clé hashée url-safe
+createdEntity.key().toUrlSafe();
+```
+
+### Modification
+Si nous faisons un `update` d'une entité, nous pouvons vérifier si l'entité existe comme cela :
+```
+Key key = this.keyFactory.newKey(id);
+Entity entity = this.datastore.get(key);
+if (entity == null) {
+   throw new IllegalArgumentException("No user with id '" + id + "' found");
+} else {
+   //Update
+}
+```
+Lors du update, on passe l'entité récupérée dans le `Builder` :
+```
+entity = Entity.builder(entity)
+        .set("username", name)
+        .set("email", email)
+        .build();
+datastore.update(entity);
+```
+
+### Suppression
+La suppression d'entités dans Datastore se fait comme cela : 
+```
+Key key = keyFactory.newKey(id);
+datastore.delete(key);
+```
+
+### Requêtes
+Les requêtes dans Datastore se font comme cela :
+```
+Query<Entity> query = Query.entityQueryBuilder()
+       .kind(DatastoreKind.USER)
+       .build();
+QueryResults<Entity> results = datastore.run(query);
+```
+Afin de récupérer les données, nous devons boucler sur le résultat : 
+```
+while (results.hasNext()) {
+   Entity e = results.next();
+   User u = new User();
+   u.setEmail(e.getString("email"));
+   u.setUsername(e.getString("username"));
+   u.setId(e.key().id());
+   users.add(u);
+}
+```
+
+Nous pouvons aussi filtrer les données lors des requêtes avec des `PropertyFilter`:
+```
+Query<Entity> query = Query.entityQueryBuilder()
+    .kind(TASK)
+    .filter(StructuredQuery.PropertyFilter.eq("userId", this.userkeyFactory.newKey(userId)))
+    .build();
+```
+L'exemple précédent démontre comment faire une requête sur une clé d'une entité.
+
 ### Routes
 Ce petit exemple démontrant des technologies de Google Cloud utilise la micro-librairie `SparkJava` pour les routes de l'API Rest. Par défaut, SparkJava utilise Jetty comme conteneur pour applications Servlet. L'application n'a donc pas besoin de services externes comme un serveur Tomcat. Le démarrage de l'application est donc rapide et le tout est démarré à partir du `main` principal.
 Voici un exemple de route qui va chercher tous les usagers et les retourne en format json.
