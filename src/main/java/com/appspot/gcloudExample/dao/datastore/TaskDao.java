@@ -71,11 +71,11 @@ public class TaskDao implements ITaskDao {
 
     @Override
     public Task createTask(Task task, String userId) {
-        FullEntity<IncompleteKey> incUser = Entity.builder(this.keyFactory.newKey())
+        FullEntity<IncompleteKey> incTask = Entity.builder(this.keyFactory.newKey())
                 .set("name", task.getName())
                 .set("userId", this.userkeyFactory.newKey(userId))
                 .build();
-        Entity createdEntity = this.datastore.add(incUser);
+        Entity createdEntity = this.datastore.add(incTask);
         task.setId(createdEntity.key().id());
         return task;
     }
