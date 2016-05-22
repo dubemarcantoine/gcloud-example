@@ -24,32 +24,58 @@
 
 package com.appspot.gcloudExample.dao.mock;
 
-import com.appspot.gcloudExample.dao.interfaces.IUserDao;
 import com.appspot.gcloudExample.bean.User;
+import com.appspot.gcloudExample.dao.interfaces.IUserDao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Marc-Antoine on 2016-05-18.
  */
 public class UserDao implements IUserDao {
+
     @Override
     public List<User> getUsers() {
-        return null;
+        return UserTable.getInstance().get();
     }
 
     @Override
     public User createUser(String name, String email) {
-        return null;
+        User user = new User();
+        user.setEmail(email);
+        user.setUsername(name);
+        UserTable.getInstance().add(user);
+        return user;
     }
 
     @Override
     public void updateUser(Long id, String name, String email) {
-
-    }
+        User user = null;
+        for(User u : UserTable.getInstance().get()) {
+            if(u.getId() == id) {
+                user = u;
+                break;
+            }
+        }
+        if(user == null) {
+            throw new IllegalArgumentException("No user with id '" + id + "' found");
+        }
+        else {
+            user.setUsername(name);
+            user.setEmail(email);
+        }
+     }
 
     @Override
     public void deleteUser(Long id) {
-
+        List<User> toRemove = new ArrayList<>();
+        for(User u : UserTable.getInstance().get()) {
+            if(u.getId() == id) {
+                System.out.print(id);
+                toRemove.add(u);
+            }
+        }
+        UserTable.getInstance().get().removeAll(toRemove);
     }
 }

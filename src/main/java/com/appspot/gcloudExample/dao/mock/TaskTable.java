@@ -22,46 +22,36 @@
  * SOFTWARE.
  */
 
-package com.appspot.gcloudExample.bean;
+package com.appspot.gcloudExample.dao.mock;
+
+import com.appspot.gcloudExample.bean.Task;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Created by Marc-Antoine on 2016-05-18.
+ * Created by Marc-Antoine on 2016-05-22.
  */
-public class User {
+public class TaskTable {
 
-    private long id;
-    private String email;
-    private String username;
+    private static AtomicInteger counter = new AtomicInteger();
+    private static Map<Long, List<Task>> tasks;
+    private static TaskTable instance;
 
-    public User() {}
+    private TaskTable() {
 
-    public User(long id, String email, String username) {
-        this.id = id;
-        this.email = email;
-        this.username = username;
     }
 
-    public long getId() {
-        return id;
+    public static TaskTable getInstance() {
+        if(instance == null) {
+            tasks = new HashMap<>();
+        }
+        return instance;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+    public Map<Long, List<Task>> get() {
+        return tasks;
     }
 }

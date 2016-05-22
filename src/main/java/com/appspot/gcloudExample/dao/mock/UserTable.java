@@ -22,46 +22,43 @@
  * SOFTWARE.
  */
 
-package com.appspot.gcloudExample.bean;
+package com.appspot.gcloudExample.dao.mock;
+
+import com.appspot.gcloudExample.bean.User;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Created by Marc-Antoine on 2016-05-18.
+ * Created by Marc-Antoine on 2016-05-22.
  */
-public class User {
+public class UserTable {
 
-    private long id;
-    private String email;
-    private String username;
+    private static AtomicInteger counter = new AtomicInteger();
+    private static List<User> table;
+    private static UserTable instance;
 
-    public User() {}
-
-    public User(long id, String email, String username) {
-        this.id = id;
-        this.email = email;
-        this.username = username;
+    private UserTable() {
     }
 
-    public long getId() {
-        return id;
+    public static UserTable getInstance() {
+        if (instance == null) {
+            instance = new UserTable();
+            table = new ArrayList<>();
+            table.add(new User(counter.incrementAndGet(), "toto", "toto@example.com"));
+            table.add(new User(counter.incrementAndGet(), "titi", "titi@example.com"));
+            table.add(new User(counter.incrementAndGet(), "tutu", "tutu@example.com"));
+        }
+        return instance;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public List<User> get() {
+        return table;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+    public void add(User u) {
+        u.setId(counter.incrementAndGet());
+        table.add(u);
     }
 }

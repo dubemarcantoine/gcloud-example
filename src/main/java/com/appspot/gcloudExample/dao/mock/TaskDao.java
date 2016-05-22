@@ -35,12 +35,13 @@ import java.util.List;
 public class TaskDao implements ITaskDao {
     @Override
     public List<Task> getTasks(String userId) {
-        return null;
+        return TaskTable.getInstance().get().get(userId);
     }
 
     @Override
     public Task createTask(Task task, String userId) {
-        return null;
+
+        return task;
     }
 
     @Override
