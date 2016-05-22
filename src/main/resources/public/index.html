@@ -50,6 +50,7 @@
               <th>ID</th>
               <th>Name</th>
               <th>Email</th>
+              <th>Tasks</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -63,7 +64,8 @@
 <script>
   $(function () {
     load();
-    initModal();
+    initUserModal();
+    initTaskModal();
   });
 
   $.ajaxSetup({
@@ -106,7 +108,8 @@
     $.getJSON("/users", function (data) {
       $.each(data, function (key, val) {
         $("<tr><td>" + val.id + "</td><td>" + val.username + "</td><td>"
-            + val.email + "</td><td>"
+            + val.email + "</td><td><button class='btn btn-info btn-sm task-btn' data-id='" + val.id + "' data-toggle='modal' data-target='#taskModal'>Tasks</button></td>"
+            + "<td>"
             + "<button data-action='edit' "
             + "class='btn btn-primary btn-sm datastore-edit' "
             + "data-toggle='modal' "
@@ -132,7 +135,7 @@
     });
   }
 
-  function initModal() {
+  function initUserModal() {
     $("#datastoreModal").on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget);
       var action = button.data('action');
@@ -159,6 +162,48 @@
       }
     });
   }
+
+  function initTaskModal() {
+    $("#taskModal").on('show.bs.modal', function (event) {
+      $('#taskContent').empty();
+      var button = $(event.relatedTarget);
+      var id = button.data('id');
+      //Get
+      $.getJSON("/users/" + id + "/tasks", function (data) {
+        $.each(data, function(index, task) {
+          addTask(task.id, task.name);
+        })
+      });
+      //Add
+      $('#taskSubmit').click(function() {
+        var addBtn = this;
+        $.post("/users/" + id + "/tasks",
+          {task: $('#task').val()},
+          function(data) {
+            addTask(data.id, data.name);
+            $('#taskSubmit').bind('click')
+          }
+        );
+      });
+      //Delete
+      $(document).on('click', '.task-delete', function() {
+        var delBtn = this;
+        var taskId = $(delBtn).attr("data-id");
+        $(delBtn).unbind('click');
+        $.ajax({
+          type: "delete",
+          url: "/tasks/" + taskId
+        }).done(function () {
+          $(delBtn).parent().parent().remove();
+        });
+      })
+    });
+  }
+
+  function addTask(id, name) {
+    $('<tr><td>' + name + '</td><td><button data-id="' + id + '" class="btn btn-danger btn-sm task-delete"><span class="glyphicon glyphicon-trash"></span></button></td></tr>').appendTo('#taskContent');
+  }
+
 </script>
 <div class="modal fade" id="datastoreModal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="dialog">
@@ -192,5 +237,45 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="taskModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+        <h4 class="modal-title" id="taskModalTitle">Add a user</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="name" class="control-label">Task:</label>
+            <input type="text" class="form-control" id="task">
+          </div>
+          <button type="button" id="taskSubmit" class="btn btn-primary">
+            Save
+          </button>
+        </form>
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>Task</th>
+            <th>Delete</th>
+          </tr>
+          </thead>
+          <tbody id="taskContent">
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

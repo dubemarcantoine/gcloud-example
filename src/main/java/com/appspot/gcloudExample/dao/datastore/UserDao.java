@@ -71,7 +71,6 @@ public class UserDao implements IUserDao {
 
     @Override
     public User createUser(String name, String email) {
-        System.out.println("create user");
         User user = new User();
         FullEntity<IncompleteKey> incUser = Entity.builder(this.keyFactory.newKey())
                 .set("username", name)
@@ -86,21 +85,16 @@ public class UserDao implements IUserDao {
 
     @Override
     public void updateUser(Long id, String name, String email) {
-        try {
-            Key key = this.keyFactory.newKey(id);
-            Entity entity = this.datastore.get(key);
-            if (entity == null) {
-                throw new IllegalArgumentException("No user with id '" + id + "' found");
-            } else {
-                entity = Entity.builder(entity)
-                        .set("username", name)
-                        .set("email", email)
-                        .build();
-                datastore.update(entity);
-            }
-        }
-        catch(Exception e) {
-            e.printStackTrace();
+        Key key = this.keyFactory.newKey(id);
+        Entity entity = this.datastore.get(key);
+        if (entity == null) {
+            throw new IllegalArgumentException("No user with id '" + id + "' found");
+        } else {
+            entity = Entity.builder(entity)
+                    .set("username", name)
+                    .set("email", email)
+                    .build();
+            datastore.update(entity);
         }
     }
 

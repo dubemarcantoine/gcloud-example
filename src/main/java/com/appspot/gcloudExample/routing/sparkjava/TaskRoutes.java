@@ -24,6 +24,7 @@
 
 package com.appspot.gcloudExample.routing.sparkjava;
 
+import com.appspot.gcloudExample.bean.Task;
 import com.appspot.gcloudExample.dao.interfaces.ITaskDao;
 import com.appspot.gcloudExample.routing.interfaces.ITaskRoutes;
 import com.google.inject.Inject;
@@ -46,11 +47,13 @@ public class TaskRoutes implements ITaskRoutes {
     @Override
     public void listen() {
         get("/users/:id/tasks", (req, res) -> {
-            return null;
+            return this.taskDao.getTasks(req.params(":id"));
         }, json());
 
         post("/users/:id/tasks", (req, res) -> {
-            return null;
+            Task task = new Task();
+            task.setName(req.queryParams("task"));
+            return this.taskDao.createTask(task, req.params(":id"));
         }, json());
 
         put("/tasks/:id", (req, res) -> {
@@ -58,7 +61,8 @@ public class TaskRoutes implements ITaskRoutes {
         }, json());
 
         delete("/tasks/:id", (req, res) -> {
-            return null;
+            this.taskDao.deleteTask(Long.parseLong(req.params(":id")));
+            return true;
         }, json());
     }
 }

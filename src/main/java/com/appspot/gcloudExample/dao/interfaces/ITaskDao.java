@@ -33,9 +33,9 @@ import java.util.List;
  */
 public interface ITaskDao {
 
-    public List<Task> getTasks(Long userId);
+    public List<Task> getTasks(String userId);
 
-    public Task createTask(Task task, Long userId);
+    public Task createTask(Task task, String userId);
 
     public void updateTask(Task task);
 
