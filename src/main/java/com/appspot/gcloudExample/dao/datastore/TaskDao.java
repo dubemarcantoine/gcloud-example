@@ -26,14 +26,12 @@ package com.appspot.gcloudExample.dao.datastore;
 
 import com.appspot.gcloudExample.bean.Task;
 import com.appspot.gcloudExample.dao.interfaces.ITaskDao;
-import com.google.cloud.datastore.*;
+import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.KeyFactory;
 import com.google.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.appspot.gcloudExample.dao.datastore.DatastoreKind.TASK;
-import static com.appspot.gcloudExample.dao.datastore.DatastoreKind.USER;
 
 /**
  * Created by Marc-Antoine on 2016-05-20.
@@ -46,37 +44,18 @@ public class TaskDao implements ITaskDao {
 
     @Inject
     public TaskDao(Connection connection) {
-        this.datastore = connection.getClient();
-        this.keyFactory = this.datastore.newKeyFactory().kind(TASK);
-        this.userkeyFactory = this.datastore.newKeyFactory().kind(USER);
+        //TODO : Instancier la connection Datastore et la keyFactory
     }
 
     @Override
     public List<Task> getTasks(String userId) {
-        List tasks = new ArrayList<>();
-        Query<Entity> query = Query.entityQueryBuilder()
-                .kind(TASK)
-                .filter(StructuredQuery.PropertyFilter.eq("userId", this.userkeyFactory.newKey(userId)))
-                .build();
-        QueryResults<Entity> resultList = this.datastore.run(query);
-        while (resultList.hasNext()) {
-            Entity e = resultList.next();
-            Task task = new Task();
-            task.setId(e.key().id());
-            task.setName(e.getString("name"));
-            tasks.add(task);
-        }
-        return tasks;
+        //TODO : Retourner les taches d'un usager
+        return new ArrayList<Task>();
     }
 
     @Override
     public Task createTask(Task task, String userId) {
-        FullEntity<IncompleteKey> incTask = Entity.builder(this.keyFactory.newKey())
-                .set("name", task.getName())
-                .set("userId", this.userkeyFactory.newKey(userId))
-                .build();
-        Entity createdEntity = this.datastore.add(incTask);
-        task.setId(createdEntity.key().id());
+        //TODO : creer une task pour un usager
         return task;
     }
 
@@ -87,8 +66,6 @@ public class TaskDao implements ITaskDao {
 
     @Override
     public void deleteTask(Long taskId) {
-        System.out.println(taskId);
-        Key key = this.keyFactory.newKey(taskId);
-        this.datastore.delete(key);
+        //TODO : supprimer une task
     }
 }

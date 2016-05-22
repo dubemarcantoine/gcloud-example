@@ -35,8 +35,10 @@ import com.google.inject.Injector;
 public class Main {
 
     public static void main(String[] args) {
+        //Injection des routes
         Injector routingInjector = Guice.createInjector(new RoutingInjector());
         RoutesModule routesModule = routingInjector.getInstance(RoutesModule.class);
+        //Configuration intiale des routes du rest service
         routesModule.setup();
     }
 }

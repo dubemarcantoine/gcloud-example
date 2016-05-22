@@ -24,10 +24,10 @@
 
 package com.appspot.gcloudExample.dao;
 
-import com.appspot.gcloudExample.dao.datastore.TaskDao;
+import com.appspot.gcloudExample.dao.mock.TaskDao;
 import com.appspot.gcloudExample.dao.interfaces.ITaskDao;
 import com.appspot.gcloudExample.dao.interfaces.IUserDao;
-import com.appspot.gcloudExample.dao.datastore.UserDao;
+import com.appspot.gcloudExample.dao.mock.UserDao;
 import com.google.inject.AbstractModule;
 
 /**
@@ -38,6 +38,7 @@ public class DatabaseInjector extends AbstractModule {
     @Override
     protected void configure() {
         //Bind the dao interface to the UserDao implementation in datastore package
+        //TODO : Changer l'implementation vers les implementations de Datastore
         bind(IUserDao.class).to(UserDao.class);
         bind(ITaskDao.class).to(TaskDao.class);
     }

@@ -32,8 +32,6 @@ import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.appspot.gcloudExample.dao.datastore.DatastoreKind.*;
-
 /**
  * Created by Marc-Antoine on 2016-05-18.
  */
@@ -45,62 +43,32 @@ public class UserDao implements IUserDao {
 
     @Inject
     public UserDao(Connection connection) {
-        this.datastore = connection.getClient();
-        this.keyFactory = datastore.newKeyFactory().kind(USER);
+        //TODO : Instancier la connection Datastore et la keyFactory
     }
 
     @Override
     public List<User> getUsers() {
         List<User> users = new ArrayList<>();
-        Query<Entity> query = Query.entityQueryBuilder()
-                .kind(DatastoreKind.USER)
-                .build();
-        //Other way of doing the query with GQL:
-        //Query<Entity> query = Query.gqlQueryBuilder(Query.ResultType.ENTITY, "SELECT * FROM " + USER).build();
-        QueryResults<Entity> results = datastore.run(query);
-        while (results.hasNext()) {
-            Entity e = results.next();
-            User u = new User();
-            u.setEmail(e.getString("email"));
-            u.setUsername(e.getString("username"));
-            u.setId(e.key().id());
-            users.add(u);
-        }
+        //TODO : Faire la requete permettant de fetch tous les usagers
+
+        //TODO : Mettre les resultats dans une liste
+        //Ne pas oublier de verifier si l'attribut existe
         return  users;
     }
 
     @Override
     public User createUser(String name, String email) {
-        User user = new User();
-        FullEntity<IncompleteKey> incUser = Entity.builder(this.keyFactory.newKey())
-                .set("username", name)
-                .set("email", email)
-                .build();
-        Entity createdEntity = datastore.add(incUser);
-        user.setId(createdEntity.key().id());
-        user.setUsername(name);
-        user.setEmail(email);
-        return user;
+        //TODO : creer un usager avec un une key, username et email
+        return new User(0, name, email);
     }
 
     @Override
     public void updateUser(Long id, String name, String email) {
-        Key key = this.keyFactory.newKey(id);
-        Entity entity = this.datastore.get(key);
-        if (entity == null) {
-            throw new IllegalArgumentException("No user with id '" + id + "' found");
-        } else {
-            entity = Entity.builder(entity)
-                    .set("username", name)
-                    .set("email", email)
-                    .build();
-            datastore.update(entity);
-        }
+        //TODO : Modifier un usager et verifier s'il existe avant
     }
 
     @Override
     public void deleteUser(Long id) {
-        Key key = keyFactory.newKey(id);
-        datastore.delete(key);
+        //TODO : Supprimer un usager
     }
 }
