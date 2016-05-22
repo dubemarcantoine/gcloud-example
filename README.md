@@ -5,22 +5,14 @@ Cet example démontre une simple application web configurée pour la librairie G
 
 ## Configuration
 ---
-Si vous suivez mon atelier en classe, vous pouvez aller directement a l'étape 3.
 
 1. Créez-vous un compte Google Developer. Suivez ces instructions : [Suivez ces instructions](https://cloud.google.com/docs/authentication#preparation) afin de configurer votre compte. Si vous voulez par la suite déployer l'application, vous devez [activer la facturation](https://support.google.com/cloud/?rd=2#topic=6288636) lorsque vous créez votre projet
 2. Activer [l'API de Datastore](https://console.cloud.google.com/apis/api/datastore.googleapis.com/overview?) 
 3. Configurez votre environnement local en installant la [librairie GCloud pour Java](https://cloud.google.com/sdk/)
+    *  Spécifiez le projet que vous voulez utiliser : `gcloud config set project <PROJECT_NAME>`
 4. Assurez-vous d'avoir Java 8 et Maven installés
 
 ## Lancer le projet localement
-Si vous suivez mon atelier en classe
-
-1. Téléchargez la [clé](https://support.google.com/cloud/?rd=2#topic=6288636) et créez votre variable d'environnement `GOOGLE_APPLICATION_CREDENTIALS` pointant vers l'emplacement du fichier.
-2. Lancez le main situé à `com.appspot.gcloudExample.Main`
-3. Dirigez-vous à l'adresse `localhost:8080` dans votre navigateur
-
-Si vous ne suivez pas l'atelier en classe :
-
 1. À la racine du projet, exécutez : `mvn clean package exec:java`
 2. Dirigez-vous à l'adresse `localhost:8080` dans votre navigateur
 
@@ -51,3 +43,19 @@ automatic_scaling:
     target_utilization: 0.5 # % CPU moyen des instances avant d'en ajouter ou en enlever.
 ```
 Pour plus d'informations, voir [comment configurer un environnement flexible avec app.yaml dans Google App Engine](https://cloud.google.com/appengine/docs/flexible/java/configuring-your-app-with-app-yaml)
+
+### Injection de dépendences
+Le projet utilise [Google Guice](https://github.com/google/guice) pour les injections de dépendances. Cette librairie permet de facilement utiliser une implémentation de classe différente en modifiant les bindings dans les classes qui injectent. Les classes servant à injecter des modules comme par exemple les DAOs héritent de `com.google.inject.AbstractModule`. On doit ensuite Override la méthode `void configure()` afin de binder nos implémentations à nos classes :
+```
+@Override
+protected void configure() {
+    //Bind the dao interface to the UserDao implementation in datastore package
+    bind(IUserDao.class).to(UserDao.class);
+    bind(ITaskDao.class).to(TaskDao.class);
+}
+```
+Nous devons ensuite configurer notre injecteur comme cela :
+```
+Injector routingInjector = Guice.createInjector(new RoutingInjector());
+```
+Lorsque nous voulons injecter une classe dans une autre, on utilise le constructeur avec des interfaces comme paramètres et on y ajoute l'annotation `@Inject`.
