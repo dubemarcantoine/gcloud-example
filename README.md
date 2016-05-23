@@ -61,7 +61,7 @@ createdEntity.key().id();
 createdEntity.key().toUrlSafe();
 ```
 
-### Modification
+**Modification**
 Si nous faisons un `update` d'une entité, nous pouvons vérifier si l'entité existe comme cela :
 ```
 Key key = this.keyFactory.newKey(id);
@@ -81,14 +81,14 @@ entity = Entity.builder(entity)
 datastore.update(entity);
 ```
 
-### Suppression
+**Suppression**
 La suppression d'entités dans Datastore se fait comme cela : 
 ```
 Key key = keyFactory.newKey(id);
 datastore.delete(key);
 ```
 
-### Requêtes
+**Requêtes**
 Les requêtes dans Datastore se font comme cela :
 ```
 Query<Entity> query = Query.entityQueryBuilder()
