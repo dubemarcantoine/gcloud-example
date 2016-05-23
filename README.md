@@ -22,10 +22,111 @@ Si vous avez activé la facturation lors de la configuration du projet, exécute
 ## Comment le projet fonctionne
 ### Datastore
 Cet exemple utilise `Google Datastore` afin de persister et traiter les données transmises. Datastore est une base de donnée NoSQL de Google. Les attributs des entités sont tous indexés pour des requêtes plus rapides.
+
+**Connection au Datastore**
+
+Si on utilise la librairie GCloud : 
+```java
+Datastore client = DatastoreOptions.defaultInstance().service();
+```
+Si on utilise Datastore à l'extérieur des environnements Google :
+```java
+DatastoreOptions options = DatastoreOptions.builder()
+        .projectId("<PROJECT_NAME>")
+        .authCredentials(AuthCredentials.createApplicationDefaults()).build();
+Datastore client = options.service();
+```
+
+**KeyFactory**
+
+Dans nos classes DAOs, nous devons spécifier un `KeyFactory` qui représentera le type des entités gérées par notre DAO : 
+```java
+KeyFactory keyFactory = datastore.newKeyFactory().kind(USER);
+```
+
+**Création d'entités**
+
+Datastore utilise des `clés-valeurs` afin de représenter les données. Voici comment nous pouvons faire une insertion :
+```java
+FullEntity<IncompleteKey> incUser = Entity.builder(this.keyFactory.newKey())
+       .set("username", name)
+       .set("email", email)
+       .build();
+Entity createdEntity = datastore.add(incUser);
+```
+Il est possible d'avoir la clé générée comme cela : 
+```java
+//Key Object
+createdEntity.key();
+//Long id
+createdEntity.key().id();
+//Clé hashée url-safe
+createdEntity.key().toUrlSafe();
+```
+
+**Modification**
+
+Si nous faisons un `update` d'une entité, nous pouvons vérifier si l'entité existe comme cela :
+```java
+Key key = this.keyFactory.newKey(id);
+Entity entity = this.datastore.get(key);
+if (entity == null) {
+   throw new IllegalArgumentException("No user with id '" + id + "' found");
+} else {
+   //Update
+}
+```
+Lors du update, on passe l'entité récupérée dans le `Builder` :
+```java
+entity = Entity.builder(entity)
+        .set("username", name)
+        .set("email", email)
+        .build();
+datastore.update(entity);
+```
+
+**Suppression**
+
+La suppression d'entités dans Datastore se fait comme cela : 
+```java
+Key key = keyFactory.newKey(id);
+datastore.delete(key);
+```
+
+**Requêtes**
+
+Les requêtes dans Datastore se font comme cela :
+```java
+Query<Entity> query = Query.entityQueryBuilder()
+       .kind(DatastoreKind.USER)
+       .build();
+QueryResults<Entity> results = datastore.run(query);
+```
+Afin de récupérer les données, nous devons boucler sur le résultat : 
+```java
+while (results.hasNext()) {
+   Entity e = results.next();
+   User u = new User();
+   u.setEmail(e.getString("email"));
+   u.setUsername(e.getString("username"));
+   u.setId(e.key().id());
+   users.add(u);
+}
+```
+
+Nous pouvons aussi filtrer les données lors des requêtes avec des `PropertyFilter`:
+```java
+Query<Entity> query = Query.entityQueryBuilder()
+    .kind(TASK)
+    .filter(StructuredQuery.PropertyFilter.eq("userId", this.userkeyFactory.newKey(userId)))
+    .build();
+```
+L'exemple précédent démontre comment faire une requête sur une clé d'une entité.
+
 ### Routes
 Ce petit exemple démontrant des technologies de Google Cloud utilise la micro-librairie `SparkJava` pour les routes de l'API Rest. Par défaut, SparkJava utilise Jetty comme conteneur pour applications Servlet. L'application n'a donc pas besoin de services externes comme un serveur Tomcat. Le démarrage de l'application est donc rapide et le tout est démarré à partir du `main` principal.
 Voici un exemple de route qui va chercher tous les usagers et les retourne en format json.
-```
+```java
 get("/users", (req, res) -> {
     return db.getUsers();
 }, json());
@@ -34,7 +135,7 @@ Pour plus d'informations, voir [le site de SparkJava](https://sparkjava.com)
 ### Déploiment
 Le fichier `src/main/appengine/app.yaml` décrit comment sera déployée l'application sur Google App Engine. Cet exemple utilise Docker qui spécifie simplement la version de la JDK et comment démarrer le jar généré par le build. Plusieurs configurations sont possibles. Par exemple, on peut spécifier des règles de `load balancer` ou des règles sur les configurations de la RAM ou des CPUs des instances.
 Voici un exemple sur comment configurer un load balancer :
-```
+```yaml
 automatic_scaling:
   min_num_instances: 5
   max_num_instances: 20
@@ -46,7 +147,7 @@ Pour plus d'informations, voir [comment configurer un environnement flexible ave
 
 ### Injection de dépendences
 Le projet utilise [Google Guice](https://github.com/google/guice) pour les injections de dépendances. Cette librairie permet de facilement utiliser une implémentation de classe différente en modifiant les bindings dans les classes qui injectent. Les classes servant à injecter des modules comme par exemple les DAOs héritent de `com.google.inject.AbstractModule`. On doit ensuite Override la méthode `void configure()` afin de binder nos implémentations à nos classes :
-```
+```java
 @Override
 protected void configure() {
     //Bind the dao interface to the UserDao implementation in datastore package
@@ -55,7 +156,7 @@ protected void configure() {
 }
 ```
 Nous devons ensuite configurer notre injecteur comme cela :
-```
+```java
 Injector routingInjector = Guice.createInjector(new RoutingInjector());
 ```
 Lorsque nous voulons injecter une classe dans une autre, on utilise le constructeur avec des interfaces comme paramètres et on y ajoute l'annotation `@Inject`.
