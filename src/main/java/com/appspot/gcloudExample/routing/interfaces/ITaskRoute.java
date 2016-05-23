@@ -22,33 +22,12 @@
  * SOFTWARE.
  */
 
-package com.appspot.gcloudExample.routing;
-
-import com.appspot.gcloudExample.routing.interfaces.IRouteConfig;
-import com.appspot.gcloudExample.routing.interfaces.ITaskRoute;
-import com.appspot.gcloudExample.routing.interfaces.IUserRoutes;
-import com.google.inject.Inject;
+package com.appspot.gcloudExample.routing.interfaces;
 
 /**
- * Created by Marc-Antoine on 2016-05-18.
+ * Created by Marc-Antoine on 2016-05-20.
  */
-public class RoutesModule {
+public interface ITaskRoute {
 
-    private IRouteConfig routeConfig;
-    private IUserRoutes userRoutes;
-    private ITaskRoute taskRoutes;
-
-    @Inject
-    public RoutesModule(IRouteConfig routeConfig, IUserRoutes userRoutes,
-                        ITaskRoute taskRoutes) {
-        this.routeConfig = routeConfig;
-        this.userRoutes = userRoutes;
-        this.taskRoutes = taskRoutes;
-    }
-
-    public void setup() {
-        this.routeConfig.init();
-        this.userRoutes.listen();
-        this.taskRoutes.listen();
-    }
+    public void listen();
 }

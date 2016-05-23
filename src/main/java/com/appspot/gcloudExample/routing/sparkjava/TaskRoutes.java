@@ -26,7 +26,7 @@ package com.appspot.gcloudExample.routing.sparkjava;
 
 import com.appspot.gcloudExample.bean.Task;
 import com.appspot.gcloudExample.dao.interfaces.ITaskDao;
-import com.appspot.gcloudExample.routing.interfaces.ITaskRoutes;
+import com.appspot.gcloudExample.routing.interfaces.ITaskRoute;
 import com.google.inject.Inject;
 
 import static com.appspot.gcloudExample.routing.sparkjava.JsonResponse.json;
@@ -35,7 +35,7 @@ import static spark.Spark.*;
 /**
  * Created by Marc-Antoine on 2016-05-20.
  */
-public class TaskRoutes implements ITaskRoutes {
+public class TaskRoutes implements ITaskRoute {
 
     private ITaskDao taskDao;
 
