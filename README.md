@@ -24,6 +24,7 @@ Si vous avez activé la facturation lors de la configuration du projet, exécute
 Cet exemple utilise `Google Datastore` afin de persister et traiter les données transmises. Datastore est une base de donnée NoSQL de Google. Les attributs des entités sont tous indexés pour des requêtes plus rapides.
 
 **Connection au Datastore**
+
 Si on utilise la librairie GCloud : 
 ```
 Datastore client = DatastoreOptions.defaultInstance().service();
@@ -37,12 +38,14 @@ Datastore client = options.service();
 ```
 
 **KeyFactory**
+
 Dans nos classes DAOs, nous devons spécifier un `KeyFactory` qui représentera le type des entités gérées par notre DAO : 
 ```
 KeyFactory keyFactory = datastore.newKeyFactory().kind(USER);
 ```
 
 **Création d'entités**
+
 Datastore utilise des `clés-valeurs` afin de représenter les données. Voici comment nous pouvons faire une insertion :
 ```
 FullEntity<IncompleteKey> incUser = Entity.builder(this.keyFactory.newKey())
@@ -62,6 +65,7 @@ createdEntity.key().toUrlSafe();
 ```
 
 **Modification**
+
 Si nous faisons un `update` d'une entité, nous pouvons vérifier si l'entité existe comme cela :
 ```
 Key key = this.keyFactory.newKey(id);
@@ -82,6 +86,7 @@ datastore.update(entity);
 ```
 
 **Suppression**
+
 La suppression d'entités dans Datastore se fait comme cela : 
 ```
 Key key = keyFactory.newKey(id);
@@ -89,6 +94,7 @@ datastore.delete(key);
 ```
 
 **Requêtes**
+
 Les requêtes dans Datastore se font comme cela :
 ```
 Query<Entity> query = Query.entityQueryBuilder()
