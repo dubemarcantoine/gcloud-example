@@ -87,7 +87,6 @@ public class TaskDao implements ITaskDao {
 
     @Override
     public void deleteTask(Long taskId) {
-        System.out.println(taskId);
         Key key = this.keyFactory.newKey(taskId);
         this.datastore.delete(key);
     }
